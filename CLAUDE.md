@@ -51,6 +51,26 @@ localStorage <-> storage.ts (loadState/saveState with 300ms debounce)
 - Components use BEM-like class naming
 - Responsive breakpoints at 480px for mobile
 
+## Git Workflow
+
+**Always commit and push changes to GitHub after completing work.** This ensures a saved version of the project.
+
+```bash
+# Stage all changes
+git add .
+
+# Commit with clear message describing what was done
+git commit -m "description of changes"
+
+# Push to GitHub
+git push
+```
+
+Commit message guidelines:
+- Start with type: `feat:`, `fix:`, `docs:`, `style:`, `refactor:`, `chore:`
+- Be specific about what changed
+- Example: `feat: add dark mode toggle` or `fix: resolve streak calculation bug`
+
 ## Adding New Features
 
 When adding components:
