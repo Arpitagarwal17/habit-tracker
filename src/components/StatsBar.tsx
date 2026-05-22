@@ -5,41 +5,60 @@ interface StatsBarProps {
 }
 
 export function StatsBar({ totalHabits, completedToday, bestStreak }: StatsBarProps) {
-  const completionRate = totalHabits > 0
-    ? Math.round((completedToday / totalHabits) * 100)
-    : 0;
+  const completionRate = totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;
+  const circumference = 2 * Math.PI * 26;
+  const strokeDashoffset = circumference - (completionRate / 100) * circumference;
 
   return (
-    <div className="stats-bar">
-      <div className="stat-card">
-        <span className="stat-value">{totalHabits}</span>
-        <span className="stat-label">Total Habits</span>
-      </div>
-      <div className="stat-card">
-        <span className="stat-value">{completedToday}/{totalHabits}</span>
-        <span className="stat-label">Done Today</span>
-        <div className="stat-progress">
-          <div
-            className="stat-progress-fill"
-            style={{ width: `${completionRate}%` }}
-          />
+    <div className="stats-section">
+      <div className="stats-header">
+        <h2>Today's Progress</h2>
+        <div className="week-nav">
+          <button className="active">This Week</button>
         </div>
       </div>
-      <div className="stat-card">
-        <span className="stat-value">
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="#f97316"
-            stroke="none"
-          >
-            <path d="M12 23c-1.5 0-3-1-3-3 0-2 1.5-3.5 3-5 1.5 1.5 3 3 3 5 0 2-1.5 3-3 3z" />
-            <path d="M12 18c-.5 0-1-.3-1-1 0-1 .5-1.5 1-2.5.5 1 1 1.5 1 2.5 0 .7-.5 1-1 1z" />
-          </svg>
-          {bestStreak}
-        </span>
-        <span className="stat-label">Best Streak</span>
+
+      <div className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-icon purple">📋</div>
+          <div className="stat-value">{totalHabits}</div>
+          <div className="stat-label">Total Habits</div>
+        </div>
+
+        <div className="stat-card">
+          <div className="progress-ring-container">
+            <div className="progress-ring">
+              <svg width="64" height="64" viewBox="0 0 64 64">
+                <defs>
+                  <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#8b5cf6" />
+                    <stop offset="100%" stopColor="#22c55e" />
+                  </linearGradient>
+                </defs>
+                <circle className="progress-ring-bg" cx="32" cy="32" r="26" />
+                <circle
+                  className="progress-ring-fill"
+                  cx="32"
+                  cy="32"
+                  r="26"
+                  strokeDasharray={circumference}
+                  strokeDashoffset={strokeDashoffset}
+                />
+              </svg>
+              <div className="progress-text">{completionRate}%</div>
+            </div>
+            <div>
+              <div className="stat-value">{completedToday}/{totalHabits}</div>
+              <div className="stat-label">Done Today</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-icon orange">🔥</div>
+          <div className="stat-value">{bestStreak}</div>
+          <div className="stat-label">Best Streak</div>
+        </div>
       </div>
     </div>
   );

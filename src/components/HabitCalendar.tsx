@@ -10,42 +10,25 @@ interface HabitCalendarProps {
   onToggle: (habitId: string, date: string) => void;
 }
 
-export function HabitCalendar({
-  habitId,
-  habitName,
-  completions,
-  onClose,
-  onToggle,
-}: HabitCalendarProps) {
+export function HabitCalendar({ habitId, habitName, completions, onClose, onToggle }: HabitCalendarProps) {
   const today = new Date();
-  const [viewDate, setViewDate] = useState({
-    year: today.getFullYear(),
-    month: today.getMonth(),
-  });
+  const [viewDate, setViewDate] = useState({ year: today.getFullYear(), month: today.getMonth() });
 
   const days = getDaysInMonth(viewDate.year, viewDate.month);
   const completedDates = new Set(
     completions.filter(c => c.habitId === habitId).map(c => c.date)
   );
 
-  const completedCount = completedDates.size;
-  const totalDays = days.length;
-  const monthRate = totalDays > 0 ? Math.round((completedCount / totalDays) * 100) : 0;
-
   const prevMonth = () => {
     setViewDate(prev => {
-      if (prev.month === 0) {
-        return { year: prev.year - 1, month: 11 };
-      }
+      if (prev.month === 0) return { year: prev.year - 1, month: 11 };
       return { year: prev.year, month: prev.month - 1 };
     });
   };
 
   const nextMonth = () => {
     setViewDate(prev => {
-      if (prev.month === 11) {
-        return { year: prev.year + 1, month: 0 };
-      }
+      if (prev.month === 11) return { year: prev.year + 1, month: 0 };
       return { year: prev.year, month: prev.month + 1 };
     });
   };
@@ -57,14 +40,17 @@ export function HabitCalendar({
     <div className="modal-overlay" onClick={onClose}>
       <div className="calendar-modal" onClick={e => e.stopPropagation()}>
         <div className="calendar-header">
-          <h3>{habitName}</h3>
-          <button className="close-btn" onClick={onClose}>x</button>
+          <div className="calendar-title">
+            <span>📅</span>
+            <h3>{habitName}</h3>
+          </div>
+          <button className="close-btn" onClick={onClose}>×</button>
         </div>
 
         <div className="calendar-nav">
-          <button onClick={prevMonth}>&lt;</button>
-          <span>{getMonthName(viewDate.month)} {viewDate.year}</span>
-          <button onClick={nextMonth}>&gt;</button>
+          <button onClick={prevMonth}>‹</button>
+          <span className="calendar-month">{getMonthName(viewDate.month)} {viewDate.year}</span>
+          <button onClick={nextMonth}>›</button>
         </div>
 
         <div className="calendar-grid">
@@ -96,7 +82,7 @@ export function HabitCalendar({
         </div>
 
         <div className="calendar-stats">
-          <span>{completedCount} / {totalDays} days completed ({monthRate}%)</span>
+          {completedDates.size} of {days.length} days in {getMonthName(viewDate.month)}
         </div>
       </div>
     </div>

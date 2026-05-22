@@ -8,45 +8,34 @@ interface HabitListProps {
   onViewCalendar: (habitId: string) => void;
 }
 
-export function HabitList({
-  habits,
-  onToggle,
-  onDelete,
-  onViewCalendar,
-}: HabitListProps) {
+export function HabitList({ habits, onToggle, onDelete, onViewCalendar }: HabitListProps) {
   if (habits.length === 0) {
     return (
       <div className="empty-state">
-        <svg
-          width="64"
-          height="64"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-        >
-          <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
-          <path d="M8 14s1.5 2 4 2 4-2 4-2" />
-          <line x1="9" y1="9" x2="9.01" y2="9" />
-          <line x1="15" y1="9" x2="15.01" y2="9" />
-        </svg>
-        <h3>No habits yet</h3>
-        <p>Click the + button to add your first habit</p>
+        <div className="empty-icon">🎯</div>
+        <h3>Start Your Journey</h3>
+        <p>Tap the + button to create your first habit and begin building a better routine.</p>
       </div>
     );
   }
 
   return (
-    <div className="habit-list">
-      {habits.map(habit => (
-        <HabitCard
-          key={habit.id}
-          habit={habit}
-          onToggle={onToggle}
-          onDelete={onDelete}
-          onViewCalendar={onViewCalendar}
-        />
-      ))}
+    <div className="habit-list-section">
+      <div className="section-header">
+        <h2>Your Habits</h2>
+        <span className="habit-count">{habits.length} habits</span>
+      </div>
+      <div className="habit-list">
+        {habits.map(habit => (
+          <HabitCard
+            key={habit.id}
+            habit={habit}
+            onToggle={onToggle}
+            onDelete={onDelete}
+            onViewCalendar={onViewCalendar}
+          />
+        ))}
+      </div>
     </div>
   );
 }

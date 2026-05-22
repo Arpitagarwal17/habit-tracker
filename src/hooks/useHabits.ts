@@ -2,11 +2,12 @@ import { useState, useEffect, useCallback } from 'react';
 import { Habit, HabitCompletion, AppState } from '../types/habit';
 import { loadState, saveState } from '../utils/storage';
 import { getTodayString } from '../utils/dateUtils';
+import { DEFAULT_EMOJI, DEFAULT_COLOR } from '../constants/colors';
 
 interface UseHabitsReturn {
   habits: Habit[];
   completions: HabitCompletion[];
-  addHabit: (name: string, description: string, color: string) => void;
+  addHabit: (name: string, description: string, color: string, emoji: string) => void;
   updateHabit: (id: string, updates: Partial<Omit<Habit, 'id' | 'createdAt'>>) => void;
   deleteHabit: (id: string) => void;
   toggleCompletion: (habitId: string, date: string) => void;
@@ -21,12 +22,13 @@ export function useHabits(): UseHabitsReturn {
     saveState(state);
   }, [state]);
 
-  const addHabit = useCallback((name: string, description: string, color: string) => {
+  const addHabit = useCallback((name: string, description: string, color: string, emoji: string) => {
     const newHabit: Habit = {
       id: crypto.randomUUID(),
       name: name.trim(),
       description: description.trim(),
-      color,
+      color: color || DEFAULT_COLOR,
+      emoji: emoji || DEFAULT_EMOJI,
       createdAt: getTodayString(),
     };
     setState(prev => ({
@@ -41,9 +43,7 @@ export function useHabits(): UseHabitsReturn {
   ) => {
     setState(prev => ({
       ...prev,
-      habits: prev.habits.map(h =>
-        h.id === id ? { ...h, ...updates } : h
-      ),
+      habits: prev.habits.map(h => h.id === id ? { ...h, ...updates } : h),
     }));
   }, []);
 
@@ -56,24 +56,18 @@ export function useHabits(): UseHabitsReturn {
 
   const toggleCompletion = useCallback((habitId: string, date: string) => {
     setState(prev => {
-      const exists = prev.completions.some(
-        c => c.habitId === habitId && c.date === date
-      );
+      const exists = prev.completions.some(c => c.habitId === habitId && c.date === date);
       return {
         ...prev,
         completions: exists
-          ? prev.completions.filter(
-              c => !(c.habitId === habitId && c.date === date)
-            )
+          ? prev.completions.filter(c => !(c.habitId === habitId && c.date === date))
           : [...prev.completions, { habitId, date }],
       };
     });
   }, []);
 
   const isCompleted = useCallback((habitId: string, date: string) => {
-    return state.completions.some(
-      c => c.habitId === habitId && c.date === date
-    );
+    return state.completions.some(c => c.habitId === habitId && c.date === date);
   }, [state.completions]);
 
   const getCompletionsForHabit = useCallback((habitId: string) => {
